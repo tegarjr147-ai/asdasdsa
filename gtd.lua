@@ -1,13 +1,13 @@
 -- 🧩 Load Rayfield UI
 local success, Rayfield = pcall(function() 
-    return loadstring(game:HttpGet('https://sirius.menu/rayfield'))() 
+    return loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusTools/Rayfield/main/source'))() 
 end)
 
-if not success then warn("Gagal load Rayfield!") return end
+if not success then return end
 
 local Window = Rayfield:CreateWindow({
-    Name = "Zoo Sniper v3 (Eyeball Fix)",
-    LoadingTitle = "Applying Corrupted ID...",
+    Name = "Zoo Sniper v3 (Hybrid Fix)",
+    LoadingTitle = "Bypassing All Remote Paths...",
     LoadingSubtitle = "by Tegar",
     ConfigurationSaving = {Enabled = false}
 })
@@ -15,19 +15,19 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("The Real Shop", nil)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteFuncs = ReplicatedStorage:WaitForChild("RemoteFunctions")
-local PromptDevProduct = RemoteFuncs:FindFirstChild("PromptDeveloperProduct")
 
--- 🛠️ Fungsi Tembak Developer Product
-local function snipeProduct(id)
+-- ==========================================
+-- 🛠️ METODE A: PROMPT DEV PRODUCT (EYEBALL)
+-- ==========================================
+local function snipeDevProduct(id)
+    local PromptDevProduct = RemoteFuncs:FindFirstChild("PromptDeveloperProduct")
     if PromptDevProduct then
-        -- Kita pakai ID asli dari Module: dp_unit_eyeball
-        -- Kita coba kirim ke kategori "shop" seperti di script aslinya
-        print("🎯 Sniping Product: " .. id)
+        print("🎯 Sniping DevProduct: " .. id)
         PromptDevProduct:InvokeServer(id, "shop")
         
         Rayfield:Notify({
-            Title = "Target Acquired",
-            Content = "Nembak " .. id .. " via DevProduct!",
+            Title = "DevProduct Sent",
+            Content = "Nembak " .. id .. " via Prompt!",
             Duration = 3
         })
     else
@@ -35,27 +35,57 @@ local function snipeProduct(id)
     end
 end
 
-Tab:CreateSection("Exclusive Units")
+-- ==========================================
+-- 🛠️ METODE B: DIRECT BUY (FIRE BLOOM)
+-- ==========================================
+local function snipeDirectUnit(unitName)
+    local BuyUnitRemote = RemoteFuncs:FindFirstChild("BuyUnitWithRobux")
+    if BuyUnitRemote then
+        print("🔥 Direct Buying Unit: " .. unitName)
+        -- Mengirim args sebagai tabel sesuai format lu
+        BuyUnitRemote:InvokeServer(unitName)
+        
+        Rayfield:Notify({
+            Title = "Direct Purchase Sent",
+            Content = "Bypass beli " .. unitName .. " sukses!",
+            Duration = 3
+        })
+    else
+        Rayfield:Notify({Title = "Error", Content = "Remote BuyUnitWithRobux ilang!", Duration = 5})
+    end
+end
 
--- Tombol Eyeball dengan ID yang BENAR (dp_unit_eyeball)
+-- SECTION 1: DEVPRODUCT PATH
+Tab:CreateSection("DevProduct Sniper (Eyeball Path)")
+
 Tab:CreateButton({
     Name = "👁️ Buy Corrupted Stem (Eyeball)",
     Callback = function() 
-        snipeProduct("dp_unit_eyeball") -- ID SESUAI MODULE
+        snipeDevProduct("dp_unit_eyeball") 
     end,
 })
 
--- Tombol Tesla (Buat perbandingan)
 Tab:CreateButton({
     Name = "⚡ Buy Teslaflora (Coil)",
     Callback = function() 
-        snipeProduct("dp_unit_coil") -- Biasanya polanya sama pakai 'dp_'
+        snipeDevProduct("dp_unit_coil") 
     end,
 })
 
-Tab:CreateSection("Quantities")
--- Versi Bulk jika ID-nya mendukung suffix
+-- SECTION 2: DIRECT BUY PATH (REQUEST LU)
+Tab:CreateSection("Direct Unit Sniper")
+
 Tab:CreateButton({
-    Name = "📦 Buy Eyeball x3",
-    Callback = function() snipeProduct("dp_unit_eyeball_x3") end,
+    Name = "🔥 Buy Snowman",
+    Callback = function() 
+        snipeDirectUnit("unit_snowman") -- Nembak tanpa prefix 'dp_'
+    end,
+})
+
+
+
+Rayfield:Notify({
+    Title = "Script Ready",
+    Content = "Hybrid Method Active - by Tegar",
+    Duration = 5
 })
