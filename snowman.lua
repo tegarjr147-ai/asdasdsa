@@ -7,7 +7,7 @@ if not success then warn("Gagal load Rayfield!") return end
 
 local Window = Rayfield:CreateWindow({
     Name = "Zoo Sniper v3 (Final Winter Fix)",
-    LoadingTitle = "Applying Corrupted & WT IDs...",
+    LoadingTitle = "Applying Corrupted & WT asdsaasdIDs...",
     LoadingSubtitle = "by Tegar",
     ConfigurationSaving = {Enabled = false}
 })
