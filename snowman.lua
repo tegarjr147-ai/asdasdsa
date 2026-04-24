@@ -6,8 +6,8 @@ end)
 if not success then warn("Gagal load Rayfield!") return end
 
 local Window = Rayfield:CreateWindow({
-    Name = "Zoo Sniper v3 (Snowman Fix)",
-    LoadingTitle = "Bypassing Product ID...",
+    Name = "Zoo Sniper v3 (Final Winter Fix)",
+    LoadingTitle = "Applying Corrupted & WT IDs...",
     LoadingSubtitle = "by Tegar",
     ConfigurationSaving = {Enabled = false}
 })
@@ -17,46 +17,58 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteFuncs = ReplicatedStorage:WaitForChild("RemoteFunctions")
 local PromptDevProduct = RemoteFuncs:FindFirstChild("PromptDeveloperProduct")
 
--- 🛠️ Fungsi Tembak ID Angka
-local function snipeProductID(id)
+-- 🛠️ Fungsi Tembak Developer Product
+local function snipeProduct(id)
     if PromptDevProduct then
-        print("🎯 Sniping Product ID: " .. id)
-        -- Kirim ID angka murni (bukan string nama)
+        print("🎯 Sniping Product: " .. id)
+        -- Menggunakan format InvokeServer standard lu
         PromptDevProduct:InvokeServer(id, "shop")
         
         Rayfield:Notify({
-            Title = "Target Sent",
-            Content = "Nembak ID " .. id .. " (Snowman)!",
+            Title = "Target Acquired",
+            Content = "Nembak " .. id .. " via DevProduct!",
             Duration = 3
         })
     else
-        Rayfield:Notify({Title = "Error", Content = "Remote Missing!", Duration = 5})
+        Rayfield:Notify({Title = "Error", Content = "Remote PromptDevProduct ilang!", Duration = 5})
     end
 end
 
-Tab:CreateSection("Special Event Unit")
-
--- Tombol Snowman pake ID yang lu kasih tadi
-Tab:CreateButton({
-    Name = "⛄ Buy Snowman (245 Robux)",
-    Callback = function() 
-        snipeProductID(3486360167) -- ID DARI LINK LU
-    end,
-})
-
 Tab:CreateSection("Exclusive Units")
 
+-- Tombol Eyeball (Original)
 Tab:CreateButton({
     Name = "👁️ Buy Corrupted Stem (Eyeball)",
     Callback = function() 
-        -- Kalau eyeball tipenya sama, lu juga harus cari ID angkanya sebenernya
-        -- Tapi kita coba pake string lama lu dulu
-        snipeProductID("dp_unit_eyeball") 
+        snipeProduct("dp_unit_eyeball") 
     end,
 })
 
+-- Tombol Snowman (Pake pola WT yang baru lu temuin)
+Tab:CreateButton({
+    Name = "⛄ Buy Snowman (dp_wt_unit_snowman)",
+    Callback = function() 
+        snipeProduct("dp_wt_unit_snowman") 
+    end,
+})
+
+-- Tombol Tesla
+Tab:CreateButton({
+    Name = "⚡ Buy Teslaflora (Coil)",
+    Callback = function() 
+        snipeProduct("dp_unit_coil") 
+    end,
+})
+
+Tab:CreateSection("Quantities")
+
+Tab:CreateButton({
+    Name = "📦 Buy Eyeball x3",
+    Callback = function() snipeProduct("dp_unit_eyeball_x3") end,
+})
+
 Rayfield:Notify({
-    Title = "Ready",
-    Content = "ID Snowman Terpasang!",
+    Title = "Script Ready",
+    Content = "Jalur Eyeball & Snowman Aktif!",
     Duration = 5
 })
