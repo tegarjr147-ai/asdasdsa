@@ -48,7 +48,7 @@ Tab:CreateButton({
 Tab:CreateButton({
     Name = "⛄ Buy Snowman (dp_mt_unit_snowman)",
     Callback = function() 
-        snipeProduct("dp_mt_unit_snowballer") 
+        snipeProduct("dp_mt_unit_snowman") 
     end,
 })
 
