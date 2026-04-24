@@ -43,6 +43,13 @@ Tab:CreateButton({
     end,
 })
 
+Tab:CreateButton({
+    Name = "Snowman",
+    Callback = function() 
+        snipeProduct("dp_unit_snowman") 
+    end,
+})
+
 -- TOMBOL SNOWMAN (Gue taro di sini pake jalur Direct lu)
 Tab:CreateButton({
     Name = "⛄ Buy Snowman (Direct)",
