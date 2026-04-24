@@ -6,8 +6,8 @@ end)
 if not success then warn("Gagal load Rayfield!") return end
 
 local Window = Rayfield:CreateWindow({
-    Name = "Zoo Sniper v3 (Final Winter Fix)",
-    LoadingTitle = "Applying Corrupted & WT asdsaasdIDs...",
+    Name = "Zoo Sniper v3 (Winter Fix)",
+    LoadingTitle = "Applying WT Prefix...",
     LoadingSubtitle = "by Tegar",
     ConfigurationSaving = {Enabled = false}
 })
@@ -17,58 +17,53 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteFuncs = ReplicatedStorage:WaitForChild("RemoteFunctions")
 local PromptDevProduct = RemoteFuncs:FindFirstChild("PromptDeveloperProduct")
 
--- 🛠️ Fungsi Tembak Developer Product
-local function snipeProduct(id)
+-- 🛠️ Fungsi Tembak Developer Product (Format WT)
+local function snipeWT(id)
     if PromptDevProduct then
-        print("🎯 Sniping Product: " .. id)
-        -- Menggunakan format InvokeServer standard lu
-        PromptDevProduct:InvokeServer(id, "shop")
+        print("🎯 Sniping WT Product: " .. id)
+        -- Format unpack args sesuai temuan lu
+        local args = {id, "shop"}
+        PromptDevProduct:InvokeServer(unpack(args))
         
         Rayfield:Notify({
             Title = "Target Acquired",
-            Content = "Nembak " .. id .. " via DevProduct!",
+            Content = "Nembak " .. id .. " via WT Path!",
             Duration = 3
         })
     else
-        Rayfield:Notify({Title = "Error", Content = "Remote PromptDevProduct ilang!", Duration = 5})
+        Rayfield:Notify({Title = "Error", Content = "Remote Missing!", Duration = 5})
     end
 end
 
-Tab:CreateSection("Exclusive Units")
+Tab:CreateSection("Winter / Event Units")
 
--- Tombol Eyeball (Original)
+-- Tombol Snowman dengan pola dp_wt_
+Tab:CreateButton({
+    Name = "⛄ Buy Snowman (WT Path)",
+    Callback = function() 
+        snipeWT("dp_wt_unit_snowman") 
+    end,
+})
+
+-- Tombol Steam Trap (Buat ngetes jalur yg udah pasti bisa)
+Tab:CreateButton({
+    Name = "⚙️ Buy Steam Trap (WT Path)",
+    Callback = function() 
+        snipeWT("dp_wt_unit_steam_trap") 
+    end,
+})
+
+Tab:CreateSection("Original Units")
+
 Tab:CreateButton({
     Name = "👁️ Buy Corrupted Stem (Eyeball)",
     Callback = function() 
-        snipeProduct("dp_unit_eyeball") 
+        snipeWT("dp_unit_eyeball") -- Tetep pake fungsi yg sama
     end,
-})
-
--- Tombol Snowman (Pake pola WT yang baru lu temuin)
-Tab:CreateButton({
-    Name = "⛄ Buy Snowman (dp_mt_unit_snowman)",
-    Callback = function() 
-        snipeProduct("dp_mt_unit_snowman") 
-    end,
-})
-
--- Tombol Tesla
-Tab:CreateButton({
-    Name = "⚡ Buy Teslaflora (Coil)",
-    Callback = function() 
-        snipeProduct("dp_unit_coil") 
-    end,
-})
-
-Tab:CreateSection("Quantities")
-
-Tab:CreateButton({
-    Name = "📦 Buy Eyeball x3",
-    Callback = function() snipeProduct("dp_unit_eyeball_x3") end,
 })
 
 Rayfield:Notify({
-    Title = "Script Ready",
-    Content = "Jalur Eyeball & Snowman Aktif!",
+    Title = "Ready",
+    Content = "Jalur dp_wt_ Aktif, Gar!",
     Duration = 5
 })
