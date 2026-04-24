@@ -46,9 +46,9 @@ Tab:CreateButton({
 
 -- Tombol Snowman (Pake pola WT yang baru lu temuin)
 Tab:CreateButton({
-    Name = "⛄ Buy Snowman (dp_wt_unit_snowman)",
+    Name = "⛄ Buy Snowman (dp_mt_unit_snowman)",
     Callback = function() 
-        snipeProduct("dp_wt_unit_snowballer") 
+        snipeProduct("dp_mt_unit_snowballer") 
     end,
 })
 
