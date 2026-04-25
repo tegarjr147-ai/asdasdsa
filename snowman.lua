@@ -1,69 +1,36 @@
--- 🧩 Load Rayfield UI
-local success, Rayfield = pcall(function() 
-    return loadstring(game:HttpGet('https://sirius.menu/rayfield'))() 
-end)
-
-if not success then warn("Gagal load Rayfield!") return end
-
-local Window = Rayfield:CreateWindow({
-    Name = "Zoo Sniper v3 (Winter Fix)",
-    LoadingTitle = "Applying WT Prefix...",
-    LoadingSubtitle = "by Tegar",
-    ConfigurationSaving = {Enabled = false}
-})
-
-local Tab = Window:CreateTab("The Real Shop", nil)
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RemoteFuncs = ReplicatedStorage:WaitForChild("RemoteFunctions")
-local PromptDevProduct = RemoteFuncs:FindFirstChild("PromptDeveloperProduct")
-
--- 🛠️ Fungsi Tembak Developer Product (Format WT)
-local function snipeWT(id)
-    if PromptDevProduct then
-        print("🎯 Sniping WT Product: " .. id)
-        -- Format unpack args sesuai temuan lu
-        local args = {id, "shop"}
-        PromptDevProduct:InvokeServer(unpack(args))
-        
-        Rayfield:Notify({
-            Title = "Target Acquired",
-            Content = "Nembak " .. id .. " via WT Path!",
-            Duration = 3
-        })
-    else
-        Rayfield:Notify({Title = "Error", Content = "Remote Missing!", Duration = 5})
+local function scanModules()
+    print("--- [ STARTING DATABASE SCAN ] ---")
+    local found = 0
+    
+    for _, v in pairs(game:GetDescendants()) do
+        -- Kita cari ModuleScript yang biasanya isinya tabel ID
+        if v:IsA("ModuleScript") then
+            local success, content = pcall(function() return require(v) end)
+            
+            if success and type(content) == "table" then
+                -- Kita cari tabel yang punya ciri-ciri database shop
+                for key, value in pairs(content) do
+                    -- Nyari ID yang ada "unit", "dp", atau "snowman"
+                    local s_key = tostring(key):lower()
+                    if s_key:find("unit") or s_key:find("dp") or s_key:find("id") then
+                        print("📂 Module: " .. v.Name)
+                        print("   ID Ketemu: " .. tostring(key) .. " = " .. tostring(value))
+                        found = found + 1
+                    end
+                    
+                    -- Kalau isinya tabel lagi (nested table), kita bongkar lagi
+                    if type(value) == "table" then
+                        for k2, v2 in pairs(value) do
+                            if tostring(k2):lower():find("id") or tostring(v2):lower():find("unit") then
+                                print("   [Nested] ID: " .. tostring(v2))
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
+    print("--- [ SCAN SELESAI: Ketemu " .. found .. " Potensi ID ] ---")
 end
 
-Tab:CreateSection("Winter / Event Units")
-
--- Tombol Snowman dengan pola dp_wt_
-Tab:CreateButton({
-    Name = "⛄ Buy Snowman (WT Path)",
-    Callback = function() 
-        snipeWT("dp_wt_unit_snowman") 
-    end,
-})
-
--- Tombol Steam Trap (Buat ngetes jalur yg udah pasti bisa)
-Tab:CreateButton({
-    Name = "⚙️ Buy Steam Trap (WT Path)",
-    Callback = function() 
-        snipeWT("dp_wt_unit_steam_trap") 
-    end,
-})
-
-Tab:CreateSection("Original Units")
-
-Tab:CreateButton({
-    Name = "👁️ Buy Corrupted Stem (Eyeball)",
-    Callback = function() 
-        snipeWT("dp_unit_eyeball") -- Tetep pake fungsi yg sama
-    end,
-})
-
-Rayfield:Notify({
-    Title = "Ready",
-    Content = "Jalur dp_wt_ Aktif, Gar!",
-    Duration = 5
-})
+scanModules()
