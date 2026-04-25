@@ -1,36 +1,53 @@
-local function scanModules()
-    print("--- [ STARTING DATABASE SCAN ] ---")
-    local found = 0
-    
-    for _, v in pairs(game:GetDescendants()) do
-        -- Kita cari ModuleScript yang biasanya isinya tabel ID
-        if v:IsA("ModuleScript") then
-            local success, content = pcall(function() return require(v) end)
-            
-            if success and type(content) == "table" then
-                -- Kita cari tabel yang punya ciri-ciri database shop
-                for key, value in pairs(content) do
-                    -- Nyari ID yang ada "unit", "dp", atau "snowman"
-                    local s_key = tostring(key):lower()
-                    if s_key:find("unit") or s_key:find("dp") or s_key:find("id") then
-                        print("📂 Module: " .. v.Name)
-                        print("   ID Ketemu: " .. tostring(key) .. " = " .. tostring(value))
-                        found = found + 1
-                    end
-                    
-                    -- Kalau isinya tabel lagi (nested table), kita bongkar lagi
-                    if type(value) == "table" then
-                        for k2, v2 in pairs(value) do
-                            if tostring(k2):lower():find("id") or tostring(v2):lower():find("unit") then
-                                print("   [Nested] ID: " .. tostring(v2))
-                            end
-                        end
-                    end
-                end
-            end
-        end
+-- 🧩 Load Rayfield UI
+local success, Rayfield = pcall(function() 
+    return loadstring(game:HttpGet('https://sirius.menu/rayfield'))() 
+end)
+
+if not success then return end
+
+local Window = Rayfield:CreateWindow({
+    Name = "Zoo Sniper v3 (Log Fix)",
+    LoadingTitle = "Syncing with Console Logs...",
+    LoadingSubtitle = "by Tegar",
+    ConfigurationSaving = {Enabled = false}
+})
+
+local Tab = Window:CreateTab("The Real Shop", nil)
+local Remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("PromptDeveloperProduct")
+
+-- 🛠️ Fungsi Sniper Universal
+local function snipe(id)
+    if Remote then
+        print("🚀 Executing: " .. tostring(id))
+        Remote:InvokeServer(id, "shop")
+        Rayfield:Notify({Title = "Sent", Content = "Targeting: " .. tostring(id), Duration = 2})
     end
-    print("--- [ SCAN SELESAI: Ketemu " .. found .. " Potensi ID ] ---")
 end
 
-scanModules()
+Tab:CreateSection("Snowman Bruteforce (Berdasarkan Log)")
+
+-- Mode 1: Pake prefix md_ (yg muncul di console lu)
+Tab:CreateButton({
+    Name = "⛄ Mode MD (md_unit_snowman)",
+    Callback = function() snipe("md_unit_snowman") end,
+})
+
+-- Mode 2: Pake prefix dp_wt_ (jalur Steam Trap)
+Tab:CreateButton({
+    Name = "⛄ Mode WT (dp_wt_unit_snowman)",
+    Callback = function() snipe("dp_wt_unit_snowman") end,
+})
+
+-- Mode 3: ID Angka Langsung (Product ID)
+Tab:CreateButton({
+    Name = "⛄ Mode ID (3486360167)",
+    Callback = function() snipe(3486360167) end,
+})
+
+Tab:CreateSection("Originals")
+Tab:CreateButton({
+    Name = "👁️ Eyeball",
+    Callback = function() snipe("dp_unit_eyeball") end,
+})
+
+Rayfield:Notify({Title = "Ready", Content = "Coba Mode MD dulu, Gar!", Duration = 5})
