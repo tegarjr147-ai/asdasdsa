@@ -6,48 +6,67 @@ end)
 if not success then return end
 
 local Window = Rayfield:CreateWindow({
-    Name = "Zoo Sniper v3 (Log Fix)",
-    LoadingTitle = "Syncing with Console Logs...",
+    Name = "Zoo Sniper v3 (The Last Stand)",
+    LoadingTitle = "Bruteforcing All Winter IDs...",
     LoadingSubtitle = "by Tegar",
     ConfigurationSaving = {Enabled = false}
 })
 
-local Tab = Window:CreateTab("The Real Shop", nil)
-local Remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteFunctions"):WaitForChild("PromptDeveloperProduct")
+local Tab = Window:CreateTab("Snowman Fix", nil)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RemotePrompt = ReplicatedStorage:WaitForChild("RemoteFunctions"):WaitForChild("PromptDeveloperProduct")
+local RemoteIndex = ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("IndexClick")
 
--- 🛠️ Fungsi Sniper Universal
-local function snipe(id)
-    if Remote then
-        print("🚀 Executing: " .. tostring(id))
-        Remote:InvokeServer(id, "shop")
-        Rayfield:Notify({Title = "Sent", Content = "Targeting: " .. tostring(id), Duration = 2})
+-- 🛠️ Fungsi Multi-Snipe (Nembak Brutal)
+local function megaSnipe()
+    -- 1. Kita pancing pake Index dulu
+    RemoteIndex:FireServer("unit_snowman")
+    task.wait(0.2)
+    
+    -- 2. Kita tembak semua kemungkinan ID yang masuk akal
+    local ids = {
+        "dp_wt_unit_snowman",  -- Pola Steam Trap
+        "dp_wt_snowman",       -- Pola tanpa 'unit'
+        "dp_unit_snowman",     -- Pola standard
+        3486360167,            -- ID murni dari link lu
+        "unit_snowman"         -- Nama murni
+    }
+    
+    for _, id in pairs(ids) do
+        print("🚀 Testing Snowman ID: " .. tostring(id))
+        RemotePrompt:InvokeServer(id, "shop")
     end
+    
+    Rayfield:Notify({
+        Title = "Mega-Shot Sent",
+        Content = "Udah ditembak semua jalur, Gar!",
+        Duration = 3
+    })
 end
 
-Tab:CreateSection("Snowman Bruteforce (Berdasarkan Log)")
+Tab:CreateSection("Special Snowman Fix")
 
--- Mode 1: Pake prefix md_ (yg muncul di console lu)
 Tab:CreateButton({
-    Name = "⛄ Mode MD (md_unit_snowman)",
-    Callback = function() snipe("md_unit_snowman") end,
+    Name = "⛄ FORCE SNIPE SNOWMAN (ALL PATHS)",
+    Callback = function()
+        megaSnipe()
+    end,
 })
 
--- Mode 2: Pake prefix dp_wt_ (jalur Steam Trap)
+Tab:CreateSection("Originals (Pasti Bisa)")
+
 Tab:CreateButton({
-    Name = "⛄ Mode WT (dp_wt_unit_snowman)",
-    Callback = function() snipe("dp_wt_unit_snowman") end,
+    Name = "👁️ Buy Eyeball",
+    Callback = function() 
+        RemotePrompt:InvokeServer("dp_unit_eyeball", "shop") 
+    end,
 })
 
--- Mode 3: ID Angka Langsung (Product ID)
 Tab:CreateButton({
-    Name = "⛄ Mode ID (3486360167)",
-    Callback = function() snipe(3486360167) end,
+    Name = "⚙️ Buy Steam Trap",
+    Callback = function() 
+        RemotePrompt:InvokeServer("dp_wt_unit_steam_trap", "shop") 
+    end,
 })
 
-Tab:CreateSection("Originals")
-Tab:CreateButton({
-    Name = "👁️ Eyeball",
-    Callback = function() snipe("dp_unit_eyeball") end,
-})
-
-Rayfield:Notify({Title = "Ready", Content = "Coba Mode MD dulu, Gar!", Duration = 5})
+Rayfield:Notify({Title = "Ready", Content = "Hajar Snowmannya, Gar!", Duration = 5})
